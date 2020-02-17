@@ -1,2 +1,21 @@
-<%= link_to 'Edit', edit_cart_path(@cart) %> |
-<%= link_to 'Back', carts_path %>
+<h2>Ваша корзина</h2>
+<table>
+	<% @cart.line_items.each do |line_item| %>
+		<tr>
+			<td><%= button_to "-", line_item_reduce_path(:id => line_item), method: :post %></td>
+			<td><%= line_item.quantity %></td>
+			<td><%= button_to "+", line_item_add_path(:id => line_item), method: :post %></td>
+			<td><%= line_item.item.name %></td>
+			<td><%= number_to_currency(line_item.total_price, unit: "руб.", separator: ",", delimiter: " ", format: "%n %u") %></td>
+			<td><%= link_to "Удалить", line_item_path(line_item), method: :delete %></td>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="3"></td>
+		<td>Всего:</td>
+		<td><%= number_to_currency(@cart.total_price, unit: "руб.", separator: ",", delimiter: " ", format: "%n %u") %></td>
+		<td></td>
+  </tr>
+</table>
+
+<%= button_to 'Очистить корзину', @cart, method: :delete, data: { confirm: 'Вы уверены?' } %>
